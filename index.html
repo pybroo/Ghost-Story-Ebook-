@@ -1,236 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghosts-EBook_Story</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <title>प्रेत कथा: फुसफुसाती परछाइयाँ</title>
+    
+    <!-- External Fonts and Icons (Required for the story's look) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Tiro+Devanagari+Hindi:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <!-- CSS styles for the story -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
-        :root{--primary-color:#8B0000;--secondary-color:#1a1a1a;--text-color:#f4f4f4;--background-color:#000000;--danger-color:#dc143c;}
-        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;color:var(--text-color);background-color:var(--background-color);background-image:url('https://www.transparenttextures.com/patterns/cracks.png'),linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.9));background-attachment:fixed;overflow-x:hidden;}
-        h1,h2,h3{font-family:'Creepster',cursive;color:var(--primary-color);letter-spacing:2px;text-shadow:2px 2px 4px rgba(0,0,0,0.7);}
-        button,input[type="submit"]{background-color:var(--primary-color);color:var(--text-color);border:2px solid var(--danger-color);padding:10px 20px;cursor:pointer;font-size:1em;transition:all 0.3s ease;box-shadow:0 0 10px var(--primary-color);}
-        button:hover,input[type="submit"]:hover{background-color:var(--danger-color);box-shadow:0 0 20px var(--danger-color);}
-        input[type="text"],input[type="password"],textarea{background-color:var(--secondary-color);border:1px solid var(--primary-color);color:var(--text-color);padding:10px;width:calc(100% - 22px);}
-        header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:linear-gradient(to bottom,#111,transparent);border-bottom:2px solid var(--primary-color);}
-        .logo-container{display:flex;align-items:center;}
-        .logo{width:70px;height:70px;background-color:var(--secondary-color);border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:40px;border:3px solid var(--primary-color);box-shadow:0 0 15px var(--danger-color),inset 0 0 10px rgba(0,0,0,0.5);margin-right:20px;animation:pulse 2s infinite;}
-        @keyframes pulse{0%{box-shadow:0 0 15px var(--danger-color),inset 0 0 10px rgba(0,0,0,0.5);}50%{box-shadow:0 0 25px var(--danger-color),inset 0 0 10px rgba(0,0,0,0.5);}100%{box-shadow:0 0 15px var(--danger-color),inset 0 0 10px rgba(0,0,0,0.5);}}
-        .website-name{font-size:2.5em;font-family:'Creepster',cursive;color:var(--text-color);text-shadow:3px 3px 0 var(--primary-color);}
-        .profile-area{display:flex;align-items:center;gap:15px;}
-        .profile-pic{width:50px;height:50px;border-radius:50%;background-color:var(--secondary-color);border:2px solid var(--primary-color);background-size:cover;background-position:center;cursor:pointer;}
-        #username-display{font-weight:bold;}
-        main{padding:20px;max-width:1200px;margin:20px auto;}
-        #login-screen{max-width:400px;margin:100px auto;padding:40px;border:2px solid var(--primary-color);background-color:rgba(10,10,10,0.8);box-shadow:0 0 20px rgba(139,0,0,0.5);}
-        #login-screen h2{text-align:center;font-size:3em;}
-        #login-form div{margin-bottom:20px;}
-        #admin-panel{background:rgba(139,0,0,0.1);border:1px dashed var(--primary-color);padding:20px;margin-bottom:40px;}
-        #ebook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:25px;}
-        .ebook-card{background-color:var(--secondary-color);border:2px solid #333;text-align:center;padding:20px;cursor:pointer;transition:all 0.3s ease;position:relative;}
-        .ebook-card:hover{transform:scale(1.05);border-color:var(--danger-color);box-shadow:0 0 15px var(--danger-color);}
-        .ebook-title{font-family:'Creepster',cursive;font-size:1.8em;color:var(--primary-color);}
-        .delete-book-btn{position:absolute;top:-10px;right:-10px;background-color:black;color:var(--danger-color);border:1px solid var(--danger-color);border-radius:50%;width:30px;height:30px;font-weight:bold;display:flex;justify-content:center;align-items:center;padding:0;line-height:0;}
-        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.8);}
-        .modal-content{background-color:var(--secondary-color);margin:2% auto;padding:30px;border:2px solid var(--primary-color);width:80%;max-width:900px;box-shadow:0 0 30px var(--primary-color);position:relative;}
-        .close-btn{color:#aaa;position:absolute;top:10px;right:25px;font-size:35px;font-weight:bold;cursor:pointer;}
-        #ebook-content{height:75vh;overflow-y:auto;border:1px solid #333;padding:15px;margin-bottom:20px;background:#111;}
-        #ebook-content pre{white-space:pre-wrap;word-wrap:break-word;font-size:1.1em;line-height:1.6;}
-        #ebook-content iframe{width:100%;height:100%;border:none;background:#fff;}
-        #comments-section{margin-top:30px;}
-        .comment{background:#252525;padding:10px;border-left:3px solid var(--primary-color);margin-bottom:10px;}
-        .comment-author{font-weight:bold;color:var(--danger-color);}
-        .hidden{display:none!important;}
-        .toast{position:fixed;top:20px;right:20px;background-color:var(--secondary-color);color:var(--text-color);padding:16px 24px;border-left:5px solid var(--danger-color);border-radius:4px;box-shadow:0 5px 15px rgba(139,0,0,0.5);z-index:2000;transform:translateX(120%);opacity:0;transition:transform .5s ease-in-out,opacity .5s ease-in-out;max-width:350px;pointer-events:none;}
-        .toast.show{transform:translateX(0);opacity:1;}
-        .toast-title{font-family:'Creepster',cursive;font-size:1.3em;color:var(--danger-color);margin:0 0 5px 0;letter-spacing:1px;}
-        .toast-body{font-size:1em;}
-        #upload-progress { margin-top: 15px; width: 100%; -webkit-appearance: none; appearance: none; }
-        #upload-progress::-webkit-progress-bar { background-color: #333; border-radius: 5px; }
-        #upload-progress::-webkit-progress-value { background-color: var(--danger-color); border-radius: 5px; transition: width 0.1s linear; }
+        body {
+            margin: 0;
+            font-family: 'Noto Sans Devanagari', serif;
+            background-color: #000000;
+            color: #f5f5f5; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+        .ebook-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .ebook {
+            width: 90vw;
+            max-width: 600px;
+            height: 80vh;
+            max-height: 800px;
+            border: 3px solid #444;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+            background-image: url('https://www.publicdomainpictures.net/pictures/310000/velka/old-house-in-the-dark-forest.jpg');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply;
+            background-color: rgba(10, 10, 10, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
+            background-color: rgba(0, 0, 0, 0.6);
+            text-align: left;
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+        .page.active { opacity: 1; visibility: visible; }
+        #page-1, #page-8 { justify-content: center; align-items: center; text-align: center; }
+        .logo { margin-bottom: 20px; }
+        .logo .fa-ghost { font-size: 80px; color: #b00000; text-shadow: 0 0 15px #ff4d4d, 0 0 5px #fff; margin-bottom: 10px; }
+        .logo h1 { font-family: 'Tiro Devanagari Hindi', cursive; font-size: 3.8rem; color: #f1f1f1; text-shadow: 3px 3px 0px #b00000; margin: 0; letter-spacing: 1px; }
+        .logo h2 { font-family: 'Noto Sans Devanagari', serif; font-size: 1.5rem; color: #ccc; margin: -10px 0 0 0; font-style: italic; }
+        .author { margin-top: 2rem; font-size: 1.2rem; font-style: italic; color: #aaa; }
+        .warning { position: absolute; bottom: 30px; color: #ff4d4d; font-weight: bold; border: 1px solid #ff4d4d; padding: 5px 10px; }
+        h3 { font-family: 'Tiro Devanagari Hindi', cursive; font-size: 2.8rem; color: #b00000; text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.2); margin-bottom: 1.5rem; width: 100%; text-align: center; }
+        p { width: 100%; max-width: 100%; line-height: 1.9; font-size: 1.1rem; margin-bottom: 1rem; }
+        .whisper-text, .final-whisper, .scratched-text, .diary-text, .epilogue-quote, .ritual-text, .back-cover-text { width: 100%; text-align: center; align-self: center; box-sizing: border-box; margin-top: 1rem; margin-bottom: 1rem; }
+        .whisper-text, .final-whisper { font-style: italic; color: #aaa; font-size: 1.3rem; text-shadow: 0 0 5px #ccc; }
+        .scratched-text { font-family: 'Tiro Devanagari Hindi', cursive; color: #e0e0e0; font-size: 1.5rem; border: 2px dashed #666; padding: 15px; letter-spacing: 1px; max-width: 80%; }
+        .diary-text, .epilogue-quote { font-style: italic; background-color: rgba(0, 0, 0, 0.5); padding: 15px; border-left: 3px solid #b00000; text-align: left; }
+        .ritual-text { font-weight: bold; font-size: 1.4rem; color: #ffc400; text-shadow: 0 0 10px #ffc400; }
+        .back-cover-text { font-size: 2rem; font-family: 'Tiro Devanagari Hindi', cursive; color: #b00000; }
+        .logo-small .fa-ghost { font-size: 40px; color: #444; }
+        .navigation { margin-top: 20px; display: flex; justify-content: center; align-items: center; width: 100%; }
+        button { background-color: #222; color: #eee; border: 1px solid #b00000; padding: 10px 20px; font-family: 'Noto Sans Devanagari', serif; font-size: 1rem; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+        button:hover { background-color: #b00000; color: #fff; }
+        button:disabled { background-color: #111; color: #555; border-color: #444; cursor: not-allowed; }
+        #page-counter { margin: 0 20px; font-size: 1.1rem; color: #888; min-width: 50px; text-align: center; }
     </style>
 </head>
 <body>
-    <div id="notification-toast" class="toast"></div>
-    <div id="login-screen">
-        <h2>Welcome to Ghosts-EBook_Story</h2>
-        <form id="login-form">
-            <div><label for="username">Username:</label><input type="text" id="username" required></div>
-            <div><label for="password">Password (for Admin only):</label><input type="password" id="password"></div>
-            <button type="submit">Enter the Shadows</button>
-        </form>
-    </div>
-    <div id="main-app" class="hidden">
-        <header>
-            <div class="logo-container"><div class="logo">👻</div><h1 class="website-name">Ghosts-EBook_Story</h1></div>
-            <div class="profile-area"><div id="username-display"></div><div id="profile-pic" class="profile-pic" title="Edit Profile"></div></div>
-        </header>
-        <main>
-            <div id="admin-panel" class="hidden">
-                <h2>Admin Controls</h2>
-                <form id="upload-form">
-                    <h3>Upload New E-Book</h3>
-                    <p>Select a .txt or .html file to upload as a new story.</p>
-                    <input type="text" id="ebook-upload-title" placeholder="E-Book Title" required><br><br>
-                    <input type="file" id="ebook-file-input" accept=".txt,text/plain,.html,text/html" required><br><br>
-                    <button type="submit" id="upload-button">Upload E-Book</button>
-                    <progress id="upload-progress" value="0" max="100" class="hidden"></progress>
-                </form>
-            </div>
-            <h2>E-Book Library</h2><div id="ebook-grid"></div>
-        </main>
-    </div>
-    <div id="ebook-reader-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="close-reader-btn">×</span>
-            <h2 id="reader-title">Book Title</h2><div id="ebook-content"></div>
-            <div id="comments-section">
-                <h3>Whispers from the Void (Comments)</h3><div id="comments-list"></div>
-                <form id="comment-form"><textarea id="comment-text" rows="3" placeholder="Leave your mark..." required></textarea><br><br><button type="submit">Post Comment</button></form>
-            </div>
+    <div class="ebook-container">
+        <div class="ebook">
+            <div class="page active" id="page-1"><div class="logo"><i class="fas fa-ghost"></i><h1>प्रेत कथा</h1><h2>फुसफुसाती परछाइयाँ</h2></div><p class="author">लेखक: प्रिंस यादव</p><div class="warning"><p>चेतावनी: कमज़ोर दिल वालों के लिए नहीं।</p></div></div>
+            <div class="page" id="page-2"><h3>🕯️ अध्याय 1: भूला हुआ गाँव</h3><p>कालीगंज के सुदूर गाँव में, जो कोहरे और रहस्यों में लिपटा हुआ था, एक जर्जर हवेली खड़ी थी जिसे 'खोखली हवेली' के नाम से जाना जाता था। दशकों से किसी ने भी अंदर जाने की हिम्मत नहीं की। स्थानीय लोग रातों में फुसफुसाहट और अपने आप हिलने वाली परछाइयों की बातें करते थे।</p><p>जब 17 वर्षीय आर्यन, जो एक उभरता हुआ पैरानॉर्मल लेखक था, अपनी किताब के लिए लोककथाएँ इकट्ठा करने कालीगंज आया, तो वह खोखली हवेली की ओर आकर्षित हो गया। गाँव वालों की चेतावनियों के बावजूद, उसकी जिज्ञासा उस पर हावी हो गई। "उस घर को मेहमान पसंद नहीं," बूढ़े पुजारी ने फुसफुसा कर कहा।</p></div>
+            <div class="page" id="page-3"><h3>🌫️ अध्याय 2: दीवारों में आवाज़</h3><p>हवेली के अंदर आर्यन की पहली रात, सन्नाटा एक पर्दे की तरह लटका हुआ था। फिर एक फुसफुसाहट सुनाई दी — हल्की और रोंगटे खड़े कर देने वाली।</p><p class="whisper-text">"मेरी मदद करो... मैं अब भी यहीं हूँ..."</p><p>आर्यन आवाज़ का पीछा करते हुए तहखाने में पहुँच गया। दीवारों पर धूल भरी तस्वीरें लगी थीं — उनमें से एक बिल्कुल उसकी तरह दिख रही थी। उसके नीचे, लकड़ी पर खरोंच कर लिखा था:</p><p class="scratched-text">"फँस गई। 1893. मुझे बचाओ।"</p></div>
+            <div class="page" id="page-4"><h3>🩸 अध्याय 3: यादों का आईना</h3><p>आर्यन को एक पुराना आईना मिला। जब उसने उसमें देखा, तो उसे अपनी परछाई नहीं दिखी — बल्कि एक जलते हुए कमरे के कोने में सफेद कपड़ों में रोती हुई एक जवान लड़की दिखाई दी।</p><p>आग अतीत में नहीं थी। अचानक, उसके चारों ओर का कमरा गर्म हो गया, और परछाइयाँ हिलने लगीं। आर्यन ने आईना तोड़ दिया। आग गायब हो गई। लेकिन अब, उसके पीछे की दीवार पर एक काले हाथ का निशान जलकर बन गया था।</p></div>
+            <div class="page" id="page-5"><h3>👻 अध्याय 4: गुप्त डायरी</h3><p>फर्श के तख्तों में छिपी हुई, आर्यन को 1893 की एक लड़की, अनाया की डायरी मिली, जिसने दावा किया था कि "साया पुरुष" उसका शिकार कर रहा था।</p><p class="diary-text">“वह कोहरे में आता है। वह खामोशी से अपनी भूख मिटाता है। मैं आखिरी हूँ। अगर तुम्हें यह मिले, तो कृपया वह पूरा करना जो मैं नहीं कर सकी।”</p><p>अनाया घर में फंसी हुई थी, शापित थी। वह साया अंदर आने वाली आत्माओं को खाता था। अगला नंबर आर्यन का था।</p></div>
+            <div class="page" id="page-6"><h3>🔥 अध्याय 5: अंतिम अनुष्ठान</h3><p>अनाया की डायरी से मिले सुरागों से, आर्यन ने आधी रात को एक अनुष्ठान किया। मोमबत्तियाँ टिमटिमाईं। वह साया प्रकट हुआ — लंबा, बिना चेहरे का, और धुएँ जैसी त्वचा वाला। उसने झपट्टा मारा।</p><p>आर्यन ने अनाया के अंतिम शब्द चिल्लाए:</p><p class="ritual-text">"मैं भटके हुओं को रौशनी देता हूँ, और खामोशी को हमेशा के लिए खत्म करता हूँ!"</p><p>एक चीख ने दीवारों को हिला दिया। परछाइयाँ गायब हो गईं। और फिर... सन्नाटा।</p></div>
+            <div class="page" id="page-7"><h3>🌄 उपसंहार: फुसफुसाहटों की किताब</h3><p>आर्यन बच निकला। लेकिन वह पहले जैसा कभी नहीं रहा। उसने अपनी किताब, "प्रेत कथा" प्रकाशित की, लेकिन पाठकों को चेतावनी दी:</p><p class="epilogue-quote">"अगर इसे पढ़ते समय तुम्हें अपने पीछे कोई फुसफुसाहट सुनाई दे… तो किताब नीचे रख देना।"</p><p>कुछ लोगों ने नहीं सुना। कुछ को आज भी वह आवाज़ सुनाई देती है।</p><p class="final-whisper">"मेरी मदद करो... मैं अब भी यहीं हूँ..."</p></div>
+            <div class="page" id="page-8"><p class="back-cover-text">"कुछ लोगों ने नहीं सुना। कुछ को आज भी वह आवाज़ सुनाई देती है।"</p><div class="logo-small"><i class="fas fa-ghost"></i></div></div>
+        </div>
+        <div class="navigation">
+            <button id="prev-btn" title="पिछला पृष्ठ">« पिछला</button>
+            <span id="page-counter">1 / 8</span>
+            <button id="next-btn" title="अगला पृष्ठ">अगला »</button>
         </div>
     </div>
-    <div id="profile-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="close-profile-btn">×</span><h2>Edit Your Profile</h2>
-            <form id="profile-form">
-                <div><label for="new-username">Change Username:</label><input type="text" id="new-username"></div><br>
-                <div><label for="profile-pic-upload">Upload Profile Picture:</label><input type="file"id="profile-pic-upload" accept="image/*"></div><br>
-                <button type="submit">Save Changes</button>
-            </form>
-            <hr style="border-color: var(--primary-color); margin: 25px 0;">
-            <div style="text-align: center;"><button id="logout-btn">Log Out</button></div>
-        </div>
-    </div>
-
+    <!-- Simple script just for turning pages -->
     <script>
-        // PASTE YOUR FIREBASE CONFIG KEYS HERE
-        const firebaseConfig = {
-            apiKey: "AIza...",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "...",
-            appId: "..."
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
         document.addEventListener('DOMContentLoaded', () => {
-            const loginScreen=document.getElementById("login-screen"),mainApp=document.getElementById("main-app"),loginForm=document.getElementById("login-form"),usernameInput=document.getElementById("username"),passwordInput=document.getElementById("password"),logoutBtn=document.getElementById("logout-btn"),usernameDisplay=document.getElementById("username-display"),profilePic=document.getElementById("profile-pic"),adminPanel=document.getElementById("admin-panel"),uploadForm=document.getElementById("upload-form"),ebookGrid=document.getElementById("ebook-grid"),ebookReaderModal=document.getElementById("ebook-reader-modal"),closeReaderBtn=document.getElementById("close-reader-btn"),readerTitle=document.getElementById("reader-title"),ebookContent=document.getElementById("ebook-content"),commentForm=document.getElementById("comment-form"),commentsList=document.getElementById("comments-list"),profileModal=document.getElementById("profile-modal"),closeProfileBtn=document.getElementById("close-profile-btn"),profileForm=document.getElementById("profile-form"),newUsernameInput=document.getElementById("new-username"),notificationToast=document.getElementById("notification-toast"),uploadProgress=document.getElementById("upload-progress"),uploadButton=document.getElementById("upload-button");
-            let state = { currentUser: null, ebooks: [] };
-            const showView=(e)=>{loginScreen.classList.add("hidden"),mainApp.classList.add("hidden"),"login"===e?loginScreen.classList.remove("hidden"):"app"===e&&mainApp.classList.remove("hidden")};
-            let notificationTimeout;const showNotification=(e,t)=>{clearTimeout(notificationTimeout),notificationToast.innerHTML=`<div class="toast-title">${e}</div><div class="toast-body">${t}</div>`,notificationToast.classList.add("show"),notificationTimeout=setTimeout(()=>{notificationToast.classList.remove("show")},5e3)};
-            const renderEbooks=()=>{ebookGrid.innerHTML="",0===state.ebooks.length?ebookGrid.innerHTML="<p>The library is empty... The Admin must scribe a new tale.</p>":state.ebooks.sort((a,b)=>b.createdAt-a.createdAt).forEach(e=>{const t=document.createElement("div");t.className="ebook-card",t.dataset.id=e.id,t.innerHTML=`<h3 class="ebook-title">${e.title}</h3>`,state.currentUser&&state.currentUser.isAdmin&&(()=>{const o=document.createElement("button");o.className="delete-book-btn",o.innerHTML="×",o.dataset.id=e.id,o.title="Delete this E-Book",t.appendChild(o)})(),ebookGrid.appendChild(t)})};
-            const renderComments=(e)=>{const t=state.ebooks.find(t=>t.id==e);commentsList.innerHTML="",t&&t.comments.length>0?t.comments.forEach(e=>{const t=document.createElement("div");t.className="comment";const o=JSON.parse(localStorage.getItem("profiles")||"{}")[e.username]||{pic:""},s=o.pic?`<img src="${o.pic}" style="width:20px; height:20px; border-radius:50%; vertical-align:middle; margin-right: 5px;">`:"";t.innerHTML=`<p class="comment-author">${s}${e.username} says:</p><p>${e.text}</p>`,commentsList.appendChild(t)}):commentsList.innerHTML="<p>Silence... No one has whispered here yet.</p>"};
-            const updateProfileUI=()=>{if(!state.currentUser)return;const e=state.currentUser.username;usernameDisplay.textContent=e;const t=JSON.parse(localStorage.getItem("profiles")||"{}")[e]||{pic:""};t.pic?(profilePic.style.backgroundImage=`url(${t.pic})`,profilePic.innerHTML=""):(profilePic.style.backgroundImage="none",profilePic.innerHTML=e.charAt(0).toUpperCase(),profilePic.style.textAlign="center",profilePic.style.fontSize="24px",profilePic.style.lineHeight="48px")};
-
-            const init = () => {
-                const loggedInUser = sessionStorage.getItem('currentUser');
-                if (loggedInUser) {
-                    state.currentUser = JSON.parse(loggedInUser);
-                    showView('app');
-                    adminPanel.classList.toggle('hidden', !state.currentUser.isAdmin);
-                    db.collection("ebooks").onSnapshot(snapshot => {
-                        state.ebooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        renderEbooks();
-                    }, error => {
-                        console.error("Error fetching books: ", error);
-                        ebookGrid.innerHTML = "<p>Could not connect to the library. The spirits are angry.</p>";
-                    });
-                    updateProfileUI();
-                } else { showView('login'); }
-            };
-
-            loginForm.addEventListener("submit",e=>{e.preventDefault();const t=usernameInput.value.trim(),o=passwordInput.value;if(!t)return void alert("Username cannot be empty.");"Admin"===t&&"Admin"===o?state.currentUser={username:"Admin",isAdmin:!0}:(state.currentUser={username:t,isAdmin:!1},(()=>{const e=JSON.parse(localStorage.getItem("profiles")||"{}");e[t]||(e[t]={pic:""},localStorage.setItem("profiles",JSON.stringify(e)))})()),sessionStorage.setItem("currentUser",JSON.stringify(state.currentUser)),init(),loginForm.reset()});
-            logoutBtn.addEventListener("click",()=>{sessionStorage.removeItem("currentUser"),state.currentUser=null,profileModal.style.display="none",init()});
-            
-            uploadForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const title = document.getElementById('ebook-upload-title').value;
-                const file = document.getElementById('ebook-file-input').files[0];
-                if (!title || !file) return;
-                uploadButton.disabled = true;
-                uploadProgress.classList.remove('hidden');
-                const filePath = `ebooks/${Date.now()}_${file.name}`;
-                const storageRef = storage.ref(filePath);
-                const uploadTask = storageRef.put(file);
-                uploadTask.on('state_changed', (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    uploadProgress.value = progress;
-                }, (error) => {
-                    console.error("Upload failed: ", error);
-                    showNotification('Upload Failed!', 'The spirits rejected the file.');
-                    uploadButton.disabled = false;
-                    uploadProgress.classList.add('hidden');
-                }, () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        const newBook = {title, type: file.name.endsWith('.html') ? 'html' : 'text', storagePath: filePath, storageUrl: downloadURL, comments: [], createdAt: firebase.firestore.FieldValue.serverTimestamp() };
-                        db.collection("ebooks").add(newBook).then(() => {
-                            showNotification('A New Tale Appears!', `The e-book "${title}" is now in the library.`);
-                            uploadForm.reset();
-                            uploadButton.disabled = false;
-                            uploadProgress.classList.add('hidden');
-                        });
-                    });
-                });
-            });
-
-            ebookGrid.addEventListener('click', async (e) => {
-                const card = e.target.closest(".ebook-card"), deleteBtn = e.target.closest(".delete-book-btn");
-                if (deleteBtn) {
-                    e.stopPropagation();
-                    if (confirm('Are you sure you want to banish this book to the void? This cannot be undone.')) {
-                        const bookId = deleteBtn.dataset.id, book = state.ebooks.find(b => b.id === bookId);
-                        if (!book) return;
-                        try {
-                            await db.collection("ebooks").doc(bookId).delete();
-                            await storage.ref(book.storagePath).delete();
-                            showNotification('Banished!', `"${book.title}" was removed from the library.`);
-                        } catch (error) { console.error("Error deleting book: ", error), alert("Failed to delete the book."); }
-                    }
-                    return;
-                }
-                if (card) {
-                    const bookId = card.dataset.id, book = state.ebooks.find(b => b.id == bookId);
-                    if (book && book.storageUrl) {
-                        readerTitle.textContent = "Loading...", ebookContent.innerHTML = "<p>Summoning the story from the ether...</p>", ebookReaderModal.style.display = 'block';
-                        try {
-                            const response = await fetch(book.storageUrl);
-                            if (!response.ok) throw new Error('Network response was not ok.');
-                            const content = await response.text();
-                            readerTitle.textContent = book.title, ebookContent.innerHTML = '';
-                            if (book.type === 'html') { const iframe = document.createElement('iframe'); iframe.srcdoc = content, iframe.sandbox = 'allow-scripts allow-same-origin', ebookContent.appendChild(iframe); }
-                            else { const pre = document.createElement('pre'); pre.textContent = content, ebookContent.appendChild(pre); }
-                        } catch (error) { console.error("Error fetching content:", error), readerTitle.textContent = "Error", ebookContent.innerHTML = "<p>The story could not be summoned.</p>"; }
-                        commentForm.dataset.bookId = bookId, renderComments(bookId);
-                    }
-                }
-            });
-
-            closeReaderBtn.onclick=()=>ebookReaderModal.style.display="none";closeProfileBtn.onclick=()=>profileModal.style.display="none";window.onclick=e=>{e.target==ebookReaderModal&&(ebookReaderModal.style.display="none"),e.target==profileModal&&(profileModal.style.display="none")};
-            
-            commentForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const text = document.getElementById('comment-text').value.trim(), bookId = e.target.dataset.bookId;
-                if (text && bookId) {
-                    try {
-                        await db.collection("ebooks").doc(bookId).update({ comments: firebase.firestore.FieldValue.arrayUnion({ username: state.currentUser.username, text: text }) });
-                        commentForm.reset();
-                    } catch (error) { console.error("Error adding comment: ", error), alert("Could not post comment."); }
-                }
-            });
-            
-            profilePic.addEventListener("click",()=>{newUsernameInput.value=state.currentUser.username,profileModal.style.display="block"});
-            profileForm.addEventListener("submit",e=>{e.preventDefault();const t=newUsernameInput.value.trim(),o=document.getElementById("profile-pic-upload").files[0],s=state.currentUser.username;if(t&&t!==s){const e=JSON.parse(localStorage.getItem("profiles")||"{}");e[t]=e[s]||{pic:""},"Admin"!==s&&delete e[s],localStorage.setItem("profiles",JSON.stringify(e)),state.currentUser.username=t,sessionStorage.setItem("currentUser",JSON.stringify(state.currentUser))}const n=e=>{const t=JSON.parse(localStorage.getItem("profiles")||"{}");t[state.currentUser.username].pic=e,localStorage.setItem("profiles",JSON.stringify(t)),updateProfileUI(),profileModal.style.display="none"};o?(()=>{const e=new FileReader;e.onload=t=>n(t.target.result),e.readAsDataURL(o)})():(updateProfileUI(),profileModal.style.display="none")});
-
-            init();
+            const pages = document.querySelectorAll('.page');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageCounter = document.getElementById('page-counter');
+            let currentPageIndex = 0;
+            const totalPages = pages.length;
+            function showPage(index) {
+                pages.forEach(page => page.classList.remove('active'));
+                pages[index].classList.add('active');
+                pageCounter.textContent = `${index + 1} / ${totalPages}`;
+                prevBtn.disabled = (index === 0);
+                nextBtn.disabled = (index === totalPages - 1);
+            }
+            nextBtn.addEventListener('click', () => { if (currentPageIndex < totalPages - 1) { currentPageIndex++; showPage(currentPageIndex); } });
+            prevBtn.addEventListener('click', () => { if (currentPageIndex > 0) { currentPageIndex--; showPage(currentPageIndex); } });
+            showPage(currentPageIndex);
         });
     </script>
 </body>
