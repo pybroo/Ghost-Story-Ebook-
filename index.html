@@ -1,131 +1,1157 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>प्रेत कथा: फुसफुसाती परछाइयाँ</title>
-    
-    <!-- External Fonts and Icons (Required for the story's look) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Tiro+Devanagari+Hindi:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-
-    <!-- CSS styles for the story -->
+    <title>Ghosts-EBook_Story</title>
     <style>
+        /* General Body & Background */
         body {
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://i.imgur.com/k91YwQd.jpg') no-repeat center center fixed; /* Ghostly, dark forest background */
+            background-size: cover;
+            color: #eee;
             margin: 0;
-            font-family: 'Noto Sans Devanagari', serif;
-            background-color: #000000;
-            color: #f5f5f5; 
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="red" d="M12 0L0 12h5l-1 4H20v-4h-4zm-2 10V6h4v4h2l-6 6-6-6h2z"/></svg>') 12 12, auto; /* Bloody pointer */
+        }
+
+        /* Scrollbar Styling for a darker look */
+        body::-webkit-scrollbar {
+            width: 12px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #111;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 6px;
+            border: 3px solid #111;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #8B0000; /* Dark Red */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .site-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #8B0000; /* Base color for logo */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-        }
-        .ebook-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .ebook {
-            width: 90vw;
-            max-width: 600px;
-            height: 80vh;
-            max-height: 800px;
-            border: 3px solid #444;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
-            background-image: url('https://www.publicdomainpictures.net/pictures/310000/velka/old-house-in-the-dark-forest.jpg');
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: multiply;
-            background-color: rgba(10, 10, 10, 0.8);
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+            border: 3px solid #FF4500; /* Orange-Red border */
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
+            animation: pulse-glow 2s infinite alternate;
         }
-        .page {
+
+        .site-logo::before {
+            content: '';
             position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.2) 0%, transparent 70%);
+            animation: ripple 1.5s infinite;
+        }
+
+        .site-logo::after {
+            content: 'G'; /* The 'G' for Ghosts */
+            position: absolute;
+            font-family: 'Creepster', cursive; /* A spooky font, will fallback if not available */
+            font-size: 40px;
+            text-shadow: 2px 2px 5px black, 0 0 10px #FF4500;
+            transform: rotate(-10deg);
+        }
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.4); }
+            to { box-shadow: 0 0 25px rgba(255, 0, 0, 1), inset 0 0 15px rgba(255, 0, 0, 0.7); }
+        }
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .site-name {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #FF4500; /* Orange-Red for name */
+            text-shadow: 3px 3px 6px #000, 0 0 10px #8B0000;
+            letter-spacing: 2px;
+        }
+
+        nav button {
+            background-color: #8B0000;
+            color: #fff;
+            border: 2px solid #FF4500;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+        }
+
+        nav button:hover {
+            background-color: #FF4500;
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: rgba(10, 10, 10, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            border: 1px solid #8B0000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #FF4500;
+            text-shadow: 2px 2px 5px #000;
+            margin-bottom: 30px;
+        }
+
+        #ebooks-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .ebook-card {
+            background-color: rgba(20, 20, 20, 0.9);
+            border: 1px solid #8B0000;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ebook-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
+            border-color: #FF4500;
+        }
+
+        .ebook-card h3 {
+            color: #FF6347; /* Tomato */
+            margin-top: 0;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 3px #000;
+        }
+
+        .ebook-card p {
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .ebook-card button {
+            background-color: #8B0000;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .ebook-card button:hover {
+            background-color: #FF4500;
+        }
+
+        .ebook-card .delete-btn {
+            background-color: #A52A2A; /* Brown-Red */
+        }
+        .ebook-card .delete-btn:hover {
+            background-color: #FF0000; /* Bright Red */
+        }
+
+        /* Modals (Login, Register, Admin, Read Ebook, Profile) */
+        .modal-overlay {
+            display: none; /* Hidden by default, will be controlled by JS */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 40px 40px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.6s ease-in-out, visibility 0.6s;
-            background-color: rgba(0, 0, 0, 0.6);
-            text-align: left;
-            justify-content: flex-start;
-            align-items: flex-start;
-            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
         }
-        .page.active { opacity: 1; visibility: visible; }
-        #page-1, #page-8 { justify-content: center; align-items: center; text-align: center; }
-        .logo { margin-bottom: 20px; }
-        .logo .fa-ghost { font-size: 80px; color: #b00000; text-shadow: 0 0 15px #ff4d4d, 0 0 5px #fff; margin-bottom: 10px; }
-        .logo h1 { font-family: 'Tiro Devanagari Hindi', cursive; font-size: 3.8rem; color: #f1f1f1; text-shadow: 3px 3px 0px #b00000; margin: 0; letter-spacing: 1px; }
-        .logo h2 { font-family: 'Noto Sans Devanagari', serif; font-size: 1.5rem; color: #ccc; margin: -10px 0 0 0; font-style: italic; }
-        .author { margin-top: 2rem; font-size: 1.2rem; font-style: italic; color: #aaa; }
-        .warning { position: absolute; bottom: 30px; color: #ff4d4d; font-weight: bold; border: 1px solid #ff4d4d; padding: 5px 10px; }
-        h3 { font-family: 'Tiro Devanagari Hindi', cursive; font-size: 2.8rem; color: #b00000; text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.2); margin-bottom: 1.5rem; width: 100%; text-align: center; }
-        p { width: 100%; max-width: 100%; line-height: 1.9; font-size: 1.1rem; margin-bottom: 1rem; }
-        .whisper-text, .final-whisper, .scratched-text, .diary-text, .epilogue-quote, .ritual-text, .back-cover-text { width: 100%; text-align: center; align-self: center; box-sizing: border-box; margin-top: 1rem; margin-bottom: 1rem; }
-        .whisper-text, .final-whisper { font-style: italic; color: #aaa; font-size: 1.3rem; text-shadow: 0 0 5px #ccc; }
-        .scratched-text { font-family: 'Tiro Devanagari Hindi', cursive; color: #e0e0e0; font-size: 1.5rem; border: 2px dashed #666; padding: 15px; letter-spacing: 1px; max-width: 80%; }
-        .diary-text, .epilogue-quote { font-style: italic; background-color: rgba(0, 0, 0, 0.5); padding: 15px; border-left: 3px solid #b00000; text-align: left; }
-        .ritual-text { font-weight: bold; font-size: 1.4rem; color: #ffc400; text-shadow: 0 0 10px #ffc400; }
-        .back-cover-text { font-size: 2rem; font-family: 'Tiro Devanagari Hindi', cursive; color: #b00000; }
-        .logo-small .fa-ghost { font-size: 40px; color: #444; }
-        .navigation { margin-top: 20px; display: flex; justify-content: center; align-items: center; width: 100%; }
-        button { background-color: #222; color: #eee; border: 1px solid #b00000; padding: 10px 20px; font-family: 'Noto Sans Devanagari', serif; font-size: 1rem; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
-        button:hover { background-color: #b00000; color: #fff; }
-        button:disabled { background-color: #111; color: #555; border-color: #444; cursor: not-allowed; }
-        #page-counter { margin: 0 20px; font-size: 1.1rem; color: #888; min-width: 50px; text-align: center; }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+            max-width: 90%;
+            max-height: 95vh; 
+            overflow-y: auto;
+            border: 2px solid #8B0000;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            color: #FF4500;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="password"],
+        .modal-content input[type="file"] { /* Styling for file input */
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #8B0000;
+            background-color: #0d0d0d;
+            color: #eee;
+            border-radius: 5px;
+            box-sizing: border-box; /* Include padding/border in width */
+        }
+        /* Specific styling for file input elements to make them look better */
+        input[type="file"]::-webkit-file-upload-button {
+            background: #8B0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background: #FF4500;
+        }
+
+
+        .modal-content textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #8B0000;
+            background-color: #0d0d0d;
+            color: #eee;
+            border-radius: 5px;
+            min-height: 150px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .modal-content button {
+            background-color: #8B0000;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .modal-content button:hover {
+            background-color: #FF4500;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #FF4500;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .close-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* eBook Reading Modal */
+        #read-ebook-content {
+            background-color: #0a0a0a;
+            border: 1px solid #8B0000;
+            padding: 0; 
+            margin-bottom: 20px;
+            /* === THIS IS THE FIX: INCREASED THE HEIGHT === */
+            height: 95vh;
+            /* =========================================== */
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+        }
+
+        #read-ebook-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        .comments-section h3 {
+            color: #FF4500;
+            margin-bottom: 15px;
+        }
+        .comment-item {
+            background-color: #222;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 3px solid #FF4500;
+        }
+        .comment-item strong {
+            color: #FFD700; /* Gold */
+            margin-right: 8px;
+        }
+        .comment-item span {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        .comment-form textarea {
+            width: calc(100% - 22px); /* Account for padding and border */
+            min-height: 80px;
+            margin-bottom: 10px;
+        }
+        .comment-form button {
+            width: auto;
+            padding: 8px 15px;
+            font-size: 1em;
+        }
+        #no-comments {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* Profile Modal */
+        .profile-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #8B0000;
+            margin-bottom: 10px;
+        }
+        .profile-info p {
+            font-size: 1.2em;
+            color: #FFD700;
+        }
+        .file-upload-info {
+            font-size: 0.8em;
+            color: #aaa;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+        .warning-text {
+            color: #FFD700; /* Gold for warnings */
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+
+        /* Notifications */
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+        }
+        .notification-card {
+            background-color: rgba(139, 0, 0, 0.9); /* Dark Red */
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            max-width: 300px;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideIn 0.5s forwards, fadeOut 0.5s 4.5s forwards;
+            border: 1px solid #FF4500;
+            position: relative;
+        }
+        .notification-card::before {
+            content: '!'; /* Default icon, could change based on type */
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.8em;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        /* Custom icons for different types of alerts */
+        .notification-card.success::before { content: '✓'; color: #00FF00; /* Green check */ }
+        .notification-card.error::before { content: '✗'; color: #FF0000; /* Red cross */ }
+        .notification-card.info::before { content: 'i'; color: #00BFFF; /* Light blue info */ }
+
+
+        .notification-card p {
+            margin: 0;
+            padding-left: 25px; /* Make space for the icon */
+        }
+
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #aaa;
+            text-align: center;
+            padding: 15px;
+            border-top: 2px solid #8B0000;
+            margin-top: 40px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 10px 15px;
+            }
+            .logo-container {
+                margin-bottom: 10px;
+            }
+            nav button {
+                margin: 5px;
+                width: calc(50% - 10px);
+                box-sizing: border-box;
+            }
+            .site-name {
+                font-size: 1.8em;
+                text-align: center;
+            }
+            main {
+                padding: 20px;
+                margin: 10px auto;
+            }
+            .ebook-card {
+                padding: 15px;
+            }
+            .modal-content {
+                padding: 20px;
+                max-width: 95%;
+                max-height: 95vh;
+            }
+            #read-ebook-content {
+                height: 70vh; /* Adjust for smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-logo {
+                width: 50px;
+                height: 50px;
+                font-size: 30px;
+            }
+            .site-logo::after {
+                font-size: 30px;
+            }
+            .site-name {
+                font-size: 1.5em;
+            }
+            nav button {
+                font-size: 0.9em;
+                padding: 8px 15px;
+            }
+            .ebook-card {
+                padding: 10px;
+            }
+            .ebook-card h3 {
+                font-size: 1.2em;
+            }
+            .ebook-card button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Font import (optional, for spooky look) */
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
     </style>
 </head>
 <body>
-    <div class="ebook-container">
-        <div class="ebook">
-            <div class="page active" id="page-1"><div class="logo"><i class="fas fa-ghost"></i><h1>प्रेत कथा</h1><h2>फुसफुसाती परछाइयाँ</h2></div><p class="author">लेखक: प्रिंस यादव</p><div class="warning"><p>चेतावनी: कमज़ोर दिल वालों के लिए नहीं।</p></div></div>
-            <div class="page" id="page-2"><h3>🕯️ अध्याय 1: भूला हुआ गाँव</h3><p>कालीगंज के सुदूर गाँव में, जो कोहरे और रहस्यों में लिपटा हुआ था, एक जर्जर हवेली खड़ी थी जिसे 'खोखली हवेली' के नाम से जाना जाता था। दशकों से किसी ने भी अंदर जाने की हिम्मत नहीं की। स्थानीय लोग रातों में फुसफुसाहट और अपने आप हिलने वाली परछाइयों की बातें करते थे।</p><p>जब 17 वर्षीय आर्यन, जो एक उभरता हुआ पैरानॉर्मल लेखक था, अपनी किताब के लिए लोककथाएँ इकट्ठा करने कालीगंज आया, तो वह खोखली हवेली की ओर आकर्षित हो गया। गाँव वालों की चेतावनियों के बावजूद, उसकी जिज्ञासा उस पर हावी हो गई। "उस घर को मेहमान पसंद नहीं," बूढ़े पुजारी ने फुसफुसा कर कहा।</p></div>
-            <div class="page" id="page-3"><h3>🌫️ अध्याय 2: दीवारों में आवाज़</h3><p>हवेली के अंदर आर्यन की पहली रात, सन्नाटा एक पर्दे की तरह लटका हुआ था। फिर एक फुसफुसाहट सुनाई दी — हल्की और रोंगटे खड़े कर देने वाली।</p><p class="whisper-text">"मेरी मदद करो... मैं अब भी यहीं हूँ..."</p><p>आर्यन आवाज़ का पीछा करते हुए तहखाने में पहुँच गया। दीवारों पर धूल भरी तस्वीरें लगी थीं — उनमें से एक बिल्कुल उसकी तरह दिख रही थी। उसके नीचे, लकड़ी पर खरोंच कर लिखा था:</p><p class="scratched-text">"फँस गई। 1893. मुझे बचाओ।"</p></div>
-            <div class="page" id="page-4"><h3>🩸 अध्याय 3: यादों का आईना</h3><p>आर्यन को एक पुराना आईना मिला। जब उसने उसमें देखा, तो उसे अपनी परछाई नहीं दिखी — बल्कि एक जलते हुए कमरे के कोने में सफेद कपड़ों में रोती हुई एक जवान लड़की दिखाई दी।</p><p>आग अतीत में नहीं थी। अचानक, उसके चारों ओर का कमरा गर्म हो गया, और परछाइयाँ हिलने लगीं। आर्यन ने आईना तोड़ दिया। आग गायब हो गई। लेकिन अब, उसके पीछे की दीवार पर एक काले हाथ का निशान जलकर बन गया था।</p></div>
-            <div class="page" id="page-5"><h3>👻 अध्याय 4: गुप्त डायरी</h3><p>फर्श के तख्तों में छिपी हुई, आर्यन को 1893 की एक लड़की, अनाया की डायरी मिली, जिसने दावा किया था कि "साया पुरुष" उसका शिकार कर रहा था।</p><p class="diary-text">“वह कोहरे में आता है। वह खामोशी से अपनी भूख मिटाता है। मैं आखिरी हूँ। अगर तुम्हें यह मिले, तो कृपया वह पूरा करना जो मैं नहीं कर सकी।”</p><p>अनाया घर में फंसी हुई थी, शापित थी। वह साया अंदर आने वाली आत्माओं को खाता था। अगला नंबर आर्यन का था।</p></div>
-            <div class="page" id="page-6"><h3>🔥 अध्याय 5: अंतिम अनुष्ठान</h3><p>अनाया की डायरी से मिले सुरागों से, आर्यन ने आधी रात को एक अनुष्ठान किया। मोमबत्तियाँ टिमटिमाईं। वह साया प्रकट हुआ — लंबा, बिना चेहरे का, और धुएँ जैसी त्वचा वाला। उसने झपट्टा मारा।</p><p>आर्यन ने अनाया के अंतिम शब्द चिल्लाए:</p><p class="ritual-text">"मैं भटके हुओं को रौशनी देता हूँ, और खामोशी को हमेशा के लिए खत्म करता हूँ!"</p><p>एक चीख ने दीवारों को हिला दिया। परछाइयाँ गायब हो गईं। और फिर... सन्नाटा।</p></div>
-            <div class="page" id="page-7"><h3>🌄 उपसंहार: फुसफुसाहटों की किताब</h3><p>आर्यन बच निकला। लेकिन वह पहले जैसा कभी नहीं रहा। उसने अपनी किताब, "प्रेत कथा" प्रकाशित की, लेकिन पाठकों को चेतावनी दी:</p><p class="epilogue-quote">"अगर इसे पढ़ते समय तुम्हें अपने पीछे कोई फुसफुसाहट सुनाई दे… तो किताब नीचे रख देना।"</p><p>कुछ लोगों ने नहीं सुना। कुछ को आज भी वह आवाज़ सुनाई देती है।</p><p class="final-whisper">"मेरी मदद करो... मैं अब भी यहीं हूँ..."</p></div>
-            <div class="page" id="page-8"><p class="back-cover-text">"कुछ लोगों ने नहीं सुना। कुछ को आज भी वह आवाज़ सुनाई देती है।"</p><div class="logo-small"><i class="fas fa-ghost"></i></div></div>
+
+    <!-- Header and Main content are initially hidden -->
+    <header class="hidden">
+        <div class="logo-container">
+            <div class="site-logo"></div>
+            <h1 class="site-name">Ghosts-EBook_Story</h1>
         </div>
-        <div class="navigation">
-            <button id="prev-btn" title="पिछला पृष्ठ">« पिछला</button>
-            <span id="page-counter">1 / 8</span>
-            <button id="next-btn" title="अगला पृष्ठ">अगला »</button>
+        <nav>
+            <button onclick="showProfileModal()">Profile</button>
+            <button id="admin-panel-btn" class="hidden" onclick="showAdminModal()">Admin Panel</button>
+            <button id="logout-btn" class="hidden" onclick="logout()">Logout</button>
+        </nav>
+    </header>
+
+    <main class="hidden">
+        <h1>Our Haunting Collection of Tales</h1>
+        <div id="ebooks-list">
+            <!-- Ebooks will be loaded here by JavaScript -->
+            <p id="no-ebooks-message" style="text-align: center; color: #aaa; font-style: italic;">No haunting tales have been uploaded yet. Check back soon!</p>
+        </div>
+    </main>
+
+    <footer class="hidden">
+        <p>© 2023 Ghosts-EBook_Story. All rights reserved. Beware the shadows.</p>
+    </footer>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Modals -->
+
+    <!-- Login/Register Modal - This will be shown first if not logged in -->
+    <div id="login-register-modal" class="modal-overlay">
+        <div class="modal-content">
+            <!-- No close button here as user must login/register to proceed -->
+            <h2>Access the Forbidden Archives</h2>
+            <div id="login-form">
+                <h3>Login</h3>
+                <label for="login-username">Username:</label>
+                <input type="text" id="login-username" placeholder="Enter username">
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" placeholder="Enter password">
+                <button onclick="handleLogin()">Login</button>
+            </div>
+            <hr style="border-color: #444; margin: 25px 0;">
+            <div id="register-form">
+                <h3>Register</h3>
+                <p style="color: #aaa; font-size: 0.9em;">(Only normal users can register. Admin account is fixed.)</p>
+                <label for="register-username">New Username:</label>
+                <input type="text" id="register-username" placeholder="Choose a username">
+                <label for="register-password">New Password:</label>
+                <input type="password" id="register-password" placeholder="Choose a password">
+                <label for="register-logo-file">Profile Logo (Choose Image):</label>
+                <input type="file" id="register-logo-file" accept="image/*">
+                <p class="warning-text">Warning: Large images may cause issues with saving data. Keep file size small!</p>
+                <button onclick="handleRegister()">Register</button>
+            </div>
         </div>
     </div>
-    <!-- Simple script just for turning pages -->
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-button" onclick="hideModal('admin-modal')">×</button>
+            <h2>Admin's Chamber of Horrors</h2>
+            <h3>Upload New E-Book</h3>
+            <label for="ebook-title">E-Book Title:</label>
+            <input type="text" id="ebook-title" placeholder="e.g., The Whispering Crypt">
+            <label for="ebook-author">Author:</label>
+            <input type="text" id="ebook-author" placeholder="e.g., A. Ghastly">
+            <label for="ebook-file-input">E-Book HTML File:</label>
+            <input type="file" id="ebook-file-input" accept=".html">
+            <p id="ebook-file-name" class="file-upload-info">No file chosen.</p>
+            <p class="warning-text">Note: The entire content of your .html file will be loaded. Ensure it has its own navigation (like the example ind.html) if you want multi-page reading.</p>
+            <button onclick="uploadEbook()">Upload E-Book</button>
+        </div>
+    </div>
+
+    <!-- Read Ebook Modal -->
+    <div id="read-ebook-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-button" onclick="hideModal('read-ebook-modal')">×</button>
+            <h2 id="read-ebook-title"></h2>
+            <p id="read-ebook-author" style="color: #FFD700; text-align: center; margin-top: -15px; margin-bottom: 20px;"></p>
+            <div id="read-ebook-content">
+                <!-- Ebook content will be loaded here inside an iframe -->
+            </div>
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <div id="comments-list">
+                    <!-- Comments will be loaded here -->
+                </div>
+                <div class="comment-form">
+                    <textarea id="comment-text" placeholder="Share your chilling thoughts..."></textarea>
+                    <button onclick="submitComment()">Post Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-button" onclick="hideModal('profile-modal')">×</button>
+            <h2>Your Haunting Profile</h2>
+            <div class="profile-info">
+                <img id="profile-pic" src="https://i.imgur.com/Qj42h3u.png" alt="Profile Ghost Logo">
+                <p>Username: <span id="profile-username-display">Guest</span></p>
+            </div>
+            <h3>Edit Profile</h3>
+            <label for="edit-username">New Username:</label>
+            <input type="text" id="edit-username" placeholder="Change your username">
+            <label for="edit-logo-file">New Profile Logo (Choose Image):</label>
+            <input type="file" id="edit-logo-file" accept="image/*">
+            <p id="profile-file-name" class="file-upload-info">No file chosen.</p>
+            <p class="warning-text">Warning: Large images may cause issues with saving data. Keep file size small!</p>
+            <button onclick="editProfile()">Save Changes</button>
+            <button onclick="logout()" style="background-color: #A52A2A; margin-top: 15px;">Logout</button>
+        </div>
+    </div>
+
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const pages = document.querySelectorAll('.page');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const pageCounter = document.getElementById('page-counter');
-            let currentPageIndex = 0;
-            const totalPages = pages.length;
-            function showPage(index) {
-                pages.forEach(page => page.classList.remove('active'));
-                pages[index].classList.add('active');
-                pageCounter.textContent = `${index + 1} / ${totalPages}`;
-                prevBtn.disabled = (index === 0);
-                nextBtn.disabled = (index === totalPages - 1);
+        // --- Data Storage (using localStorage) ---
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let ebooks = JSON.parse(localStorage.getItem('ebooks')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let comments = JSON.parse(localStorage.getItem('comments')) || [];
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+        // Ensure Admin user exists
+        if (!users.find(u => u.username === 'Admin')) {
+            users.push({ username: 'Admin', password: 'Admin', isAdmin: true, profilePic: 'https://i.imgur.com/2Xy0C71.png' }); // Ghost admin pic
+            saveUsers();
+        }
+
+        // --- Helper Functions for localStorage ---
+        function saveEbooks() { localStorage.setItem('ebooks', JSON.stringify(ebooks)); }
+        function saveUsers() { localStorage.setItem('users', JSON.stringify(users)); }
+        function saveComments() { localStorage.setItem('comments', JSON.stringify(comments)); }
+        function saveNotifications() { localStorage.setItem('notifications', JSON.stringify(notifications)); }
+
+        // --- UI Element References ---
+        const headerElement = document.querySelector('header');
+        const mainElement = document.querySelector('main');
+        const footerElement = document.querySelector('footer');
+        const ebooksListDiv = document.getElementById('ebooks-list');
+        const adminPanelBtn = document.getElementById('admin-panel-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const noEbooksMessage = document.getElementById('no-ebooks-message');
+        const notificationContainer = document.getElementById('notification-container');
+        const readEbookContentDiv = document.getElementById('read-ebook-content');
+
+
+        let currentEbookId = null; // To store the ID of the currently open ebook for comments
+        let currentEbookBlobUrl = null; // To store the Blob URL for the iframe, for revocation
+
+        // Temporary storage for file content during upload process
+        let uploadedEbookContent = null;
+        let uploadedProfilePicBase64 = null; // For edit profile
+        let registerProfilePicBase64 = null; // For register
+
+
+        // --- Modal Control Functions ---
+        function showModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function hideModal(id) {
+            // Clean up Blob URL when ebook modal closes
+            if (id === 'read-ebook-modal' && currentEbookBlobUrl) {
+                URL.revokeObjectURL(currentEbookBlobUrl);
+                currentEbookBlobUrl = null; // Reset
+                readEbookContentDiv.innerHTML = ''; // Clear iframe content
             }
-            nextBtn.addEventListener('click', () => { if (currentPageIndex < totalPages - 1) { currentPageIndex++; showPage(currentPageIndex); } });
-            prevBtn.addEventListener('click', () => { if (currentPageIndex > 0) { currentPageIndex--; showPage(currentPageIndex); } });
-            showPage(currentPageIndex);
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // --- Authentication & User Management ---
+        function updateNavButtons() {
+            if (currentUser) {
+                logoutBtn.classList.remove('hidden');
+                if (currentUser.isAdmin) {
+                    adminPanelBtn.classList.remove('hidden');
+                } else {
+                    adminPanelBtn.classList.add('hidden');
+                }
+            } else {
+                logoutBtn.classList.add('hidden');
+                adminPanelBtn.classList.add('hidden');
+            }
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showCustomAlert(`Welcome, ${currentUser.username}! The spirits greet you.`, 'success');
+                hideModal('login-register-modal');
+
+                // Show main content and header/footer
+                headerElement.classList.remove('hidden');
+                mainElement.classList.remove('hidden');
+                footerElement.classList.remove('hidden');
+
+                updateNavButtons(); // Update buttons based on login status
+                renderEbooks();     // Load ebooks
+                renderProfile();    // Display profile
+            } else {
+                alert('Invalid username or password. Beware the spirits that guard these halls.'); // Keep native alert for errors
+            }
+        }
+
+        function handleRegister() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+
+            if (!username || !password) {
+                alert('Username and password cannot be empty!');
+                return;
+            }
+            if (users.some(u => u.username === username)) {
+                alert('That username is already taken. Try a different alias.');
+                return;
+            }
+            if (username === 'Admin') {
+                alert('The "Admin" username is reserved for the master of this domain.');
+                return;
+            }
+
+            const newUser = {
+                username: username,
+                password: password,
+                isAdmin: false,
+                profilePic: registerProfilePicBase64 || 'https://i.imgur.com/Qj42h3u.png' // Default ghost logo
+            };
+            users.push(newUser);
+            saveUsers();
+            showCustomAlert('Your presence is registered! Prepare for tales untold.', 'success');
+            // Clear inputs after successful registration
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-logo-file').value = ''; // Clear file input
+            registerProfilePicBase64 = null; // Reset temp storage
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showCustomAlert('You have left the haunted grounds.', 'info');
+
+            // Hide main content and header/footer, show login modal
+            headerElement.classList.add('hidden');
+            mainElement.classList.add('hidden');
+            footerElement.classList.add('hidden');
+            showModal('login-register-modal');
+
+            updateNavButtons(); // Update buttons (will hide admin/logout)
+            renderEbooks();     // Re-render to hide admin buttons
+            renderProfile();    // Reset profile display
+        }
+
+        // --- Profile Management ---
+        function showProfileModal() {
+            if (!currentUser) {
+                alert('You must be logged in to view your profile.');
+                return;
+            }
+            const profilePic = document.getElementById('profile-pic');
+            const profileUsernameDisplay = document.getElementById('profile-username-display');
+            const editUsernameInput = document.getElementById('edit-username');
+            const editLogoFileInput = document.getElementById('edit-logo-file');
+            const profileFileNameSpan = document.getElementById('profile-file-name');
+
+            profilePic.src = currentUser.profilePic || 'https://i.imgur.com/Qj42h3u.png';
+            profileUsernameDisplay.textContent = currentUser.username;
+            editUsernameInput.value = currentUser.username;
+            editLogoFileInput.value = ''; // Clear file input for new selection
+            profileFileNameSpan.textContent = 'No file chosen.'; // Reset file name display
+            uploadedProfilePicBase64 = null; // Reset temp storage
+
+            showModal('profile-modal');
+        }
+
+        function editProfile() {
+            if (!currentUser) {
+                alert('You must be logged in to edit your profile.');
+                return;
+            }
+
+            const newUsername = document.getElementById('edit-username').value;
+            // The new profile picture is already in uploadedProfilePicBase64 if a file was selected
+
+            if (newUsername && newUsername !== currentUser.username) {
+                 if (newUsername === 'Admin') {
+                    alert('The "Admin" username is reserved.');
+                    return;
+                }
+                if (users.some(u => u.username === newUsername && u.username !== currentUser.username)) {
+                    alert('This username is already taken by another spirit.');
+                    return;
+                }
+                currentUser.username = newUsername;
+            }
+            // Apply new profile picture if uploaded
+            if (uploadedProfilePicBase64) {
+                currentUser.profilePic = uploadedProfilePicBase64;
+            }
+
+            // Update user in the main users array
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex > -1) {
+                users[userIndex] = currentUser;
+            }
+
+            saveUsers();
+            localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Update current user in local storage
+            showCustomAlert('Profile updated successfully!', 'success');
+            hideModal('profile-modal');
+            renderProfile(); // Re-render profile display
+        }
+
+        // --- E-Book Management (Admin Only) ---
+        function showAdminModal() {
+            if (!currentUser || !currentUser.isAdmin) {
+                alert('Access Denied. Only the true master can enter here.');
+                return;
+            }
+            // Reset modal inputs on open
+            document.getElementById('ebook-title').value = '';
+            document.getElementById('ebook-author').value = '';
+            document.getElementById('ebook-file-input').value = ''; // Clear file input
+            document.getElementById('ebook-file-name').textContent = 'No file chosen.'; // Reset file name display
+            uploadedEbookContent = null; // Reset temporary content storage
+            showModal('admin-modal');
+        }
+
+        function uploadEbook() {
+            if (!currentUser || !currentUser.isAdmin) {
+                alert('You are not authorized to upload eBooks!');
+                return;
+            }
+
+            const title = document.getElementById('ebook-title').value;
+            const author = document.getElementById('ebook-author').value;
+            const htmlContent = uploadedEbookContent; // Get content from file reader
+
+            if (!title || !author || !htmlContent) {
+                alert('All fields (including E-Book HTML File) are required to summon a new tale!');
+                return;
+            }
+
+            const newEbook = {
+                id: Date.now(), // Unique ID
+                title: title,
+                author: author,
+                content: htmlContent, // Store the full HTML content
+                uploadedBy: currentUser.username,
+                uploadDate: new Date().toLocaleDateString()
+            };
+
+            ebooks.unshift(newEbook); // Add to the beginning
+            saveEbooks();
+
+            // Create notification (different type, uses default notification styling)
+            showCustomAlert(`New eBook: "${newEbook.title}" by ${newEbook.author} has materialized!`, 'info');
+
+            alert('E-Book uploaded successfully! A new terror awaits.'); // Still using native alert for final upload confirmation
+            hideModal('admin-modal');
+            // Clear inputs after successful upload
+            document.getElementById('ebook-title').value = '';
+            document.getElementById('ebook-author').value = '';
+            document.getElementById('ebook-file-input').value = '';
+            document.getElementById('ebook-file-name').textContent = 'No file chosen.';
+            uploadedEbookContent = null;
+            renderEbooks(); // Re-render the list
+        }
+
+        function deleteEbook(id) {
+            if (!currentUser || !currentUser.isAdmin) {
+                alert('You lack the power to banish these tales!');
+                return;
+            }
+            if (confirm('Are you sure you want to banish this e-book forever?')) {
+                ebooks = ebooks.filter(ebook => ebook.id !== id);
+                saveEbooks();
+                alert('E-Book banished!');
+                renderEbooks();
+            }
+        }
+
+        function renderEbooks() {
+            ebooksListDiv.innerHTML = '';
+            if (ebooks.length === 0) {
+                noEbooksMessage.classList.remove('hidden');
+                ebooksListDiv.appendChild(noEbooksMessage);
+                return;
+            } else {
+                noEbooksMessage.classList.add('hidden');
+            }
+
+            ebooks.forEach(ebook => {
+                const ebookCard = document.createElement('div');
+                ebookCard.classList.add('ebook-card');
+                ebookCard.innerHTML = `
+                    <h3>${ebook.title}</h3>
+                    <p>By: ${ebook.author}</p>
+                    <p>Uploaded: ${ebook.uploadDate}</p>
+                    <button onclick="openEbook(${ebook.id})">Read E-Book</button>
+                    ${currentUser && currentUser.isAdmin ? `<button class="delete-btn" onclick="deleteEbook(${ebook.id})">Delete</button>` : ''}
+                `;
+                ebooksListDiv.appendChild(ebookCard);
+            });
+        }
+
+        // --- E-Book Reading & Comments ---
+        function openEbook(id) {
+            if (!currentUser) {
+                alert('You must be logged in to read an e-book and comment!');
+                showModal('login-register-modal'); // Prompt login if not logged in
+                return;
+            }
+
+            const ebook = ebooks.find(e => e.id === id);
+            if (!ebook) {
+                alert('E-Book not found. Perhaps it was a phantom?');
+                return;
+            }
+
+            currentEbookId = id; // Set current ebook ID for comments
+
+            document.getElementById('read-ebook-title').textContent = ebook.title;
+            document.getElementById('read-ebook-author').textContent = `By: ${ebook.author}`;
+
+            // Create an iframe and load the ebook content into it
+            readEbookContentDiv.innerHTML = ''; // Clear any previous content/iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+
+            // Create a Blob from the ebook content and set it as the iframe's src
+            const blob = new Blob([ebook.content], { type: 'text/html' });
+            currentEbookBlobUrl = URL.createObjectURL(blob); // Store for later revocation
+            iframe.src = currentEbookBlobUrl;
+
+            readEbookContentDiv.appendChild(iframe);
+
+            renderComments(id);
+            showModal('read-ebook-modal');
+        }
+
+        function renderComments(ebookId) {
+            const commentsListDiv = document.getElementById('comments-list');
+            commentsListDiv.innerHTML = ''; // Clear previous comments
+
+            const ebookComments = comments.filter(c => c.ebookId === ebookId);
+
+            if (ebookComments.length === 0) {
+                const noComments = document.createElement('p');
+                noComments.id = 'no-comments';
+                noComments.textContent = 'No comments yet. Be the first to share your chills!';
+                commentsListDiv.appendChild(noComments);
+            } else {
+                ebookComments.forEach(comment => {
+                    const commentItem = document.createElement('div');
+                    commentItem.classList.add('comment-item');
+                    const user = users.find(u => u.username === comment.username) || { username: 'Unknown Ghost', profilePic: 'https://i.imgur.com/Qj42h3u.png' }; // Fallback for deleted users
+                    commentItem.innerHTML = `
+                        <strong>${comment.username}</strong> <span>on ${new Date(comment.timestamp).toLocaleString()}</span>
+                        <p>${comment.text}</p>
+                    `;
+                    commentsListDiv.appendChild(commentItem);
+                });
+            }
+        }
+
+        function submitComment() {
+            if (!currentUser) {
+                alert('You must be logged in to leave a comment. Anonymous whispers are not recorded here.');
+                return;
+            }
+            if (!currentEbookId) {
+                alert('Error: No e-book selected for commenting.');
+                return;
+            }
+
+            const commentText = document.getElementById('comment-text').value;
+            if (!commentText.trim()) {
+                alert('Comment cannot be empty!');
+                return;
+            }
+
+            const newComment = {
+                ebookId: currentEbookId,
+                username: currentUser.username,
+                text: commentText.trim(),
+                timestamp: new Date().toISOString()
+            };
+
+            comments.push(newComment);
+            saveComments();
+            document.getElementById('comment-text').value = ''; // Clear the input
+            renderComments(currentEbookId); // Re-render comments for the current ebook
+            showCustomAlert('Your haunting words echo within the pages!', 'success');
+        }
+
+        // --- Custom Notifications ---
+        function showCustomAlert(message, type = 'info') { // type can be 'success', 'error', 'info'
+            const notificationCard = document.createElement('div');
+            notificationCard.classList.add('notification-card', type); // Add type class for potential specific styling
+            notificationCard.innerHTML = `<p>${message}</p>`;
+            notificationContainer.appendChild(notificationCard);
+
+            // Remove after 5 seconds
+            setTimeout(() => {
+                notificationCard.remove();
+            }, 5000);
+        }
+
+        function showStoredNotifications() {
+            if (notifications.length > 0) {
+                // Display latest one on page load if any
+                const latestNotification = notifications[0];
+                showCustomAlert(latestNotification.message, 'info'); // Use 'info' type for historical notifications
+            }
+        }
+
+
+        // --- File Input Handlers ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ebook HTML file input handler
+            const ebookFileInput = document.getElementById('ebook-file-input');
+            const ebookFileNameSpan = document.getElementById('ebook-file-name');
+            if (ebookFileInput) {
+                ebookFileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        ebookFileNameSpan.textContent = `Selected: ${file.name}`;
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            uploadedEbookContent = e.target.result;
+                        };
+                        reader.readAsText(file); // Read as plain text
+                    } else {
+                        ebookFileNameSpan.textContent = 'No file chosen.';
+                        uploadedEbookContent = null;
+                    }
+                });
+            }
+
+            // Profile picture file input handler for EDIT PROFILE
+            const editLogoFileInput = document.getElementById('edit-logo-file');
+            const profileFileNameSpan = document.getElementById('profile-file-name');
+            if (editLogoFileInput) {
+                editLogoFileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        profileFileNameSpan.textContent = `Selected: ${file.name}`;
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            uploadedProfilePicBase64 = e.target.result; // Store Base64 string
+                        };
+                        reader.readAsDataURL(file); // Read as Data URL (Base64)
+                    } else {
+                        profileFileNameSpan.textContent = 'No file chosen.';
+                        uploadedProfilePicBase64 = null;
+                    }
+                });
+            }
+
+            // Profile picture file input handler for REGISTER
+            const registerLogoFileInput = document.getElementById('register-logo-file');
+            if (registerLogoFileInput) {
+                registerLogoFileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            registerProfilePicBase64 = e.target.result; // Store Base64 string
+                        };
+                        reader.readAsDataURL(file); // Read as Data URL (Base64)
+                    } else {
+                        registerProfilePicBase64 = null;
+                    }
+                });
+            }
+
+
+            // --- Initialization on page load (determines if login modal is shown) ---
+            if (currentUser) {
+                // If user is already logged in (from previous session via localStorage)
+                headerElement.classList.remove('hidden'); // Show header
+                mainElement.classList.remove('hidden');   // Show main content
+                footerElement.classList.remove('hidden'); // Show footer
+                updateNavButtons();
+                renderEbooks();
+                showStoredNotifications();
+                renderProfile();
+            } else {
+                // If no user is logged in, hide main content and show the login modal
+                headerElement.classList.add('hidden');
+                mainElement.classList.add('hidden');
+                footerElement.classList.add('hidden');
+                showModal('login-register-modal');
+            }
         });
     </script>
 </body>
