@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghosts-EBook_Story</title>
+    <style>
+        /* --- Google Font for a spooky vibe --- */
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+        /* --- Global Styles & Theme --- */
+        :root {
+            --primary-color: #8B0000; /* Dark Red */
+            --secondary-color: #1a1a1a; /* Very Dark Gray */
+            --text-color: #f4f4f4; /* Light Gray/White */
+            --background-color: #000000;
+            --danger-color: #dc143c; /* Crimson */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            background-image: url('https://www.transparenttextures.com/patterns/cracks.png'), linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9));
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Creepster', cursive;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        button, input[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            border: 2px solid var(--danger-color);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: var(--danger-color);
+            box-shadow: 0 0 20px var(--danger-color);
+        }
+
+        input[type="text"], input[type="password"], textarea {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            padding: 10px;
+            width: calc(100% - 22px);
+        }
+
+        /* --- Header & Logo --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: linear-gradient(to bottom, #111, transparent);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 15px var(--danger-color), inset 0 0 10px rgba(0,0,0,0.5);
+            margin-right: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--danger-color), inset 0 0 10px rgba(0,0,0,0.5); }
+            50% { box-shadow: 0 0 25px var(--danger-color), inset 0 0 10px rgba(0,0,0,0.5); }
+            100% { box-shadow: 0 0 15px var(--danger-color), inset 0 0 10px rgba(0,0,0,0.5); }
+        }
+
+        .website-name {
+            font-size: 2.5em;
+            font-family: 'Creepster', cursive;
+            color: var(--text-color);
+            text-shadow: 3px 3px 0 var(--primary-color);
+        }
+
+        /* --- Profile Area --- */
+        .profile-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+        #username-display {
+            font-weight: bold;
+        }
+
+        /* --- Main Content --- */
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        /* --- Login Screen --- */
+        #login-screen {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            border: 2px solid var(--primary-color);
+            background-color: rgba(10, 10, 10, 0.8);
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+        }
+        #login-screen h2 {
+            text-align: center;
+            font-size: 3em;
+        }
+        #login-form div {
+            margin-bottom: 20px;
+        }
+
+        /* --- Admin Panel --- */
+        #admin-panel {
+            background: rgba(139, 0, 0, 0.1);
+            border: 1px dashed var(--primary-color);
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* --- E-Book Grid --- */
+        #ebook-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        .ebook-card {
+            background-color: var(--secondary-color);
+            border: 2px solid #333;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .ebook-card:hover {
+            transform: scale(1.05);
+            border-color: var(--danger-color);
+            box-shadow: 0 0 15px var(--danger-color);
+        }
+        .ebook-title {
+            font-family: 'Creepster', cursive;
+            font-size: 1.8em;
+            color: var(--primary-color);
+        }
+        .delete-book-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: black;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            line-height: 0;
+        }
+
+        /* --- Modals (E-book Reader & Profile) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: var(--secondary-color);
+            margin: 2% auto;
+            padding: 30px;
+            border: 2px solid var(--primary-color);
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0 0 30px var(--primary-color);
+            position: relative;
+        }
+
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- E-book Reader Specific --- */
+        #ebook-content {
+            height: 75vh; 
+            overflow-y: auto;
+            border: 1px solid #333;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #111;
+        }
+        #ebook-content pre {
+             white-space: pre-wrap;
+             word-wrap: break-word;
+             font-size: 1.1em;
+             line-height: 1.6;
+        }
+        #ebook-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        #comments-section { margin-top: 30px; }
+        .comment {
+            background: #252525;
+            padding: 10px;
+            border-left: 3px solid var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .comment-author {
+            font-weight: bold;
+            color: var(--danger-color);
+        }
+        
+        /* --- General App Styles --- */
+        .hidden { display: none !important; }
+
+        /* --- NEW: Notification Toast Styling --- */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 16px 24px;
+            border-left: 5px solid var(--danger-color);
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.5);
+            z-index: 2000;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            max-width: 350px;
+            pointer-events: none; /* Can't be clicked */
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .toast-title {
+            font-family: 'Creepster', cursive;
+            font-size: 1.3em;
+            color: var(--danger-color);
+            margin: 0 0 5px 0;
+            letter-spacing: 1px;
+        }
+
+        .toast-body {
+            font-size: 1em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- NEW: Notification Toast Container -->
+    <div id="notification-toast" class="toast"></div>
+
+    <!-- ======================= -->
+    <!--  LOGIN SCREEN           -->
+    <!-- ======================= -->
+    <div id="login-screen">
+        <h2>Welcome to Ghosts-EBook_Story</h2>
+        <form id="login-form">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" required>
+            </div>
+            <div>
+                <label for="password">Password (for Admin only):</label>
+                <input type="password" id="password">
+            </div>
+            <button type="submit">Enter the Shadows</button>
+        </form>
+    </div>
+
+    <!-- ======================= -->
+    <!--  MAIN APPLICATION       -->
+    <!-- ======================= -->
+    <div id="main-app" class="hidden">
+        <header>
+            <div class="logo-container">
+                <div class="logo">👻</div>
+                <h1 class="website-name">Ghosts-EBook_Story</h1>
+            </div>
+            <div class="profile-area">
+                <div id="username-display"></div>
+                <div id="profile-pic" class="profile-pic" title="Edit Profile"></div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Admin Panel (only visible to admin) -->
+            <div id="admin-panel" class="hidden">
+                <h2>Admin Controls</h2>
+                <form id="upload-form">
+                    <h3>Upload New E-Book</h3>
+                    <p>Select a .txt or .html file to upload as a new story.</p>
+                    <input type="text" id="ebook-upload-title" placeholder="E-Book Title" required><br><br>
+                    <input type="file" id="ebook-file-input" accept=".txt,.html" required><br><br>
+                    <button type="submit">Upload E-Book</button>
+                </form>
+            </div>
+
+            <!-- E-Book Library -->
+            <h2>E-Book Library</h2>
+            <div id="ebook-grid"></div>
+        </main>
+    </div>
+
+    <!-- ======================= -->
+    <!--  E-BOOK READER MODAL    -->
+    <!-- ======================= -->
+    <div id="ebook-reader-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-reader-btn">&times;</span>
+            <h2 id="reader-title">Book Title</h2>
+            <div id="ebook-content"></div>
+            <div id="comments-section">
+                <h3>Whispers from the Void (Comments)</h3>
+                <div id="comments-list"></div>
+                <form id="comment-form">
+                    <textarea id="comment-text" rows="3" placeholder="Leave your mark..." required></textarea><br><br>
+                    <button type="submit">Post Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= -->
+    <!--  PROFILE EDITOR MODAL   -->
+    <!-- ======================= -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-profile-btn">&times;</span>
+            <h2>Edit Your Profile</h2>
+            <form id="profile-form">
+                <div>
+                    <label for="new-username">Change Username:</label>
+                    <input type="text" id="new-username">
+                </div><br>
+                <div>
+                    <label for="profile-pic-upload">Upload Profile Picture:</label>
+                    <input type="file" id="profile-pic-upload" accept="image/*">
+                </div><br>
+                <button type="submit">Save Changes</button>
+            </form>
+            <hr style="border-color: var(--primary-color); margin: 25px 0;">
+            <div style="text-align: center;">
+                 <button id="logout-btn">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- DOM ELEMENTS ---
+        const loginScreen = document.getElementById('login-screen');
+        const mainApp = document.getElementById('main-app');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const logoutBtn = document.getElementById('logout-btn');
+        const usernameDisplay = document.getElementById('username-display');
+        const profilePic = document.getElementById('profile-pic');
+        const adminPanel = document.getElementById('admin-panel');
+        const uploadForm = document.getElementById('upload-form');
+        const ebookGrid = document.getElementById('ebook-grid');
+        const ebookReaderModal = document.getElementById('ebook-reader-modal');
+        const closeReaderBtn = document.getElementById('close-reader-btn');
+        const readerTitle = document.getElementById('reader-title');
+        const ebookContent = document.getElementById('ebook-content');
+        const commentForm = document.getElementById('comment-form');
+        const commentsList = document.getElementById('comments-list');
+        const profileModal = document.getElementById('profile-modal');
+        const closeProfileBtn = document.getElementById('close-profile-btn');
+        const profileForm = document.getElementById('profile-form');
+        const newUsernameInput = document.getElementById('new-username');
+        const notificationToast = document.getElementById('notification-toast'); // NEW
+        
+        // --- LOCALSTORAGE "DATABASE" ---
+        let state = {
+            currentUser: null,
+            ebooks: JSON.parse(localStorage.getItem('ebooks')) || [],
+            profiles: JSON.parse(localStorage.getItem('profiles')) || {}
+        };
+
+        // --- HELPER FUNCTIONS ---
+        const saveState = () => {
+            localStorage.setItem('ebooks', JSON.stringify(state.ebooks));
+            localStorage.setItem('profiles', JSON.stringify(state.profiles));
+        };
+
+        const showView = (view) => {
+            loginScreen.classList.add('hidden');
+            mainApp.classList.add('hidden');
+            if (view === 'login') {
+                loginScreen.classList.remove('hidden');
+            } else if (view === 'app') {
+                mainApp.classList.remove('hidden');
+            }
+        };
+        
+        // --- NEW: Notification Function ---
+        let notificationTimeout;
+        const showNotification = (title, message) => {
+            clearTimeout(notificationTimeout);
+            notificationToast.innerHTML = `
+                <div class="toast-title">${title}</div>
+                <div class="toast-body">${message}</div>
+            `;
+            notificationToast.classList.add('show');
+            notificationTimeout = setTimeout(() => {
+                notificationToast.classList.remove('show');
+            }, 5000); // Notification disappears after 5 seconds
+        };
+
+        // --- RENDER FUNCTIONS ---
+        const renderEbooks = () => {
+            ebookGrid.innerHTML = '';
+            if (state.ebooks.length === 0) {
+                ebookGrid.innerHTML = '<p>The library is empty... The Admin must scribe a new tale.</p>';
+                return;
+            }
+            state.ebooks.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'ebook-card';
+                card.dataset.id = book.id;
+                card.innerHTML = `<h3 class="ebook-title">${book.title}</h3>`;
+                
+                if (state.currentUser && state.currentUser.isAdmin) {
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-book-btn';
+                    deleteBtn.innerHTML = '&times;';
+                    deleteBtn.dataset.id = book.id;
+                    deleteBtn.title = "Delete this E-Book";
+                    card.appendChild(deleteBtn);
+                }
+                
+                ebookGrid.appendChild(card);
+            });
+        };
+
+        const renderComments = (bookId) => {
+            const book = state.ebooks.find(b => b.id == bookId);
+            commentsList.innerHTML = '';
+            if (book && book.comments.length > 0) {
+                book.comments.forEach(comment => {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment';
+                    const profile = state.profiles[comment.username] || { pic: '' };
+                    const authorPic = profile.pic ? `<img src="${profile.pic}" style="width:20px; height:20px; border-radius:50%; vertical-align:middle; margin-right: 5px;">` : '';
+                    commentDiv.innerHTML = `<p class="comment-author">${authorPic}${comment.username} says:</p><p>${comment.text}</p>`;
+                    commentsList.appendChild(commentDiv);
+                });
+            } else {
+                commentsList.innerHTML = '<p>Silence... No one has whispered here yet.</p>';
+            }
+        };
+        
+        const updateProfileUI = () => {
+            if (!state.currentUser) return;
+            const username = state.currentUser.username;
+            usernameDisplay.textContent = username;
+            
+            const profile = state.profiles[username] || { pic: '' };
+            if (profile.pic) {
+                profilePic.style.backgroundImage = `url(${profile.pic})`;
+            } else {
+                 profilePic.style.backgroundImage = `none`;
+                 profilePic.innerHTML = username.charAt(0).toUpperCase();
+                 profilePic.style.textAlign = 'center';
+                 profilePic.style.fontSize = '24px';
+                 profilePic.style.lineHeight = '48px';
+            }
+        };
+
+        // --- MAIN APP LOGIC ---
+        const init = () => {
+            const loggedInUser = sessionStorage.getItem('currentUser');
+            if (loggedInUser) {
+                state.currentUser = JSON.parse(loggedInUser);
+                showView('app');
+                adminPanel.classList.toggle('hidden', !state.currentUser.isAdmin);
+                renderEbooks();
+                updateProfileUI();
+            } else {
+                showView('login');
+            }
+        };
+
+        // --- EVENT LISTENERS ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            if (!username) { alert('Username cannot be empty.'); return; }
+            if (username === 'Admin' && password === 'Admin') {
+                state.currentUser = { username: 'Admin', isAdmin: true };
+            } else {
+                state.currentUser = { username: username, isAdmin: false };
+                if (!state.profiles[username]) {
+                    state.profiles[username] = { pic: '' };
+                    saveState();
+                }
+            }
+            sessionStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+            init();
+            loginForm.reset();
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('currentUser');
+            state.currentUser = null;
+            profileModal.style.display = 'none';
+            init();
+        });
+
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('ebook-upload-title').value;
+            const fileInput = document.getElementById('ebook-file-input');
+            const file = fileInput.files[0];
+
+            if (title && file) {
+                const fileType = file.name.endsWith('.html') ? 'html' : 'text';
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const newBook = { id: Date.now(), title, content: event.target.result, type: fileType, comments: [] };
+                    state.ebooks.push(newBook);
+                    saveState();
+                    renderEbooks();
+                    uploadForm.reset();
+                    // UPDATED: Call the new notification function instead of alert()
+                    showNotification('A New Tale Appears!', `The e-book "${title}" has been summoned to the library.`);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        ebookGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.ebook-card');
+            const deleteBtn = e.target.closest('.delete-book-btn');
+            if (deleteBtn) {
+                e.stopPropagation(); 
+                if (confirm('Are you sure you want to banish this book to the void?')) {
+                    const bookId = deleteBtn.dataset.id;
+                    state.ebooks = state.ebooks.filter(b => b.id != bookId);
+                    saveState();
+                    renderEbooks();
+                }
+                return;
+            }
+            if (card) {
+                const bookId = card.dataset.id;
+                const book = state.ebooks.find(b => b.id == bookId);
+                if (book) {
+                    readerTitle.textContent = book.title;
+                    ebookContent.innerHTML = ''; 
+                    if (book.type === 'html') {
+                        const iframe = document.createElement('iframe');
+                        iframe.srcdoc = book.content; 
+                        iframe.sandbox = 'allow-scripts allow-same-origin'; 
+                        ebookContent.appendChild(iframe);
+                    } else {
+                        const pre = document.createElement('pre');
+                        pre.textContent = book.content;
+                        ebookContent.appendChild(pre);
+                    }
+                    commentForm.dataset.bookId = bookId;
+                    renderComments(bookId);
+                    ebookReaderModal.style.display = 'block';
+                }
+            }
+        });
+
+        closeReaderBtn.onclick = () => ebookReaderModal.style.display = 'none';
+        closeProfileBtn.onclick = () => profileModal.style.display = 'none';
+        window.onclick = (e) => {
+            if (e.target == ebookReaderModal) ebookReaderModal.style.display = "none";
+            if (e.target == profileModal) profileModal.style.display = "none";
+        };
+
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = document.getElementById('comment-text').value.trim();
+            const bookId = e.target.dataset.bookId;
+            if (text) {
+                const book = state.ebooks.find(b => b.id == bookId);
+                if (book) {
+                    const newComment = { username: state.currentUser.username, text: text };
+                    book.comments.push(newComment);
+                    saveState();
+                    renderComments(bookId);
+                    commentForm.reset();
+                }
+            }
+        });
+
+        profilePic.addEventListener('click', () => {
+            newUsernameInput.value = state.currentUser.username;
+            profileModal.style.display = 'block';
+        });
+
+        profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newUsername = newUsernameInput.value.trim();
+            const picUpload = document.getElementById('profile-pic-upload').files[0];
+            const oldUsername = state.currentUser.username;
+            if (newUsername && newUsername !== oldUsername) {
+                state.profiles[newUsername] = state.profiles[oldUsername] || { pic: '' };
+                if (oldUsername !== 'Admin') delete state.profiles[oldUsername];
+                state.ebooks.forEach(book => {
+                    book.comments.forEach(comment => { if (comment.username === oldUsername) { comment.username = newUsername; } });
+                });
+                state.currentUser.username = newUsername;
+                sessionStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+            }
+            const processPic = (picDataUrl) => {
+                state.profiles[state.currentUser.username].pic = picDataUrl;
+                saveState(); updateProfileUI(); profileModal.style.display = 'none';
+            };
+            if (picUpload) {
+                const reader = new FileReader();
+                reader.onload = (event) => { processPic(event.target.result); };
+                reader.readAsDataURL(picUpload);
+            } else {
+                saveState(); updateProfileUI(); profileModal.style.display = 'none';
+            }
+        });
+        
+        init();
+    });
+    </script>
+</body>
+</html>
