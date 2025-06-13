@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghosts-EBook_Story</title>
-    <!-- UPDATED: Added Firebase Storage library -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     <style>
-        /* All the CSS styling remains the same - no changes here */
         @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
         :root{--primary-color:#8B0000;--secondary-color:#1a1a1a;--text-color:#f4f4f4;--background-color:#000000;--danger-color:#dc143c;}
         body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;color:var(--text-color);background-color:var(--background-color);background-image:url('https://www.transparenttextures.com/patterns/cracks.png'),linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.9));background-attachment:fixed;overflow-x:hidden;}
@@ -77,9 +75,8 @@
                     <h3>Upload New E-Book</h3>
                     <p>Select a .txt or .html file to upload as a new story.</p>
                     <input type="text" id="ebook-upload-title" placeholder="E-Book Title" required><br><br>
-                    <input type="file" id="ebook-file-input" accept=".txt,.html" required><br><br>
+                    <input type="file" id="ebook-file-input" accept=".txt,text/plain,.html,text/html" required><br><br>
                     <button type="submit" id="upload-button">Upload E-Book</button>
-                    <!-- UPDATED: Added progress bar -->
                     <progress id="upload-progress" value="0" max="100" class="hidden"></progress>
                 </form>
             </div>
@@ -123,13 +120,11 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage(); // Initialize Firebase Storage
+        const storage = firebase.storage();
 
         document.addEventListener('DOMContentLoaded', () => {
             const loginScreen=document.getElementById("login-screen"),mainApp=document.getElementById("main-app"),loginForm=document.getElementById("login-form"),usernameInput=document.getElementById("username"),passwordInput=document.getElementById("password"),logoutBtn=document.getElementById("logout-btn"),usernameDisplay=document.getElementById("username-display"),profilePic=document.getElementById("profile-pic"),adminPanel=document.getElementById("admin-panel"),uploadForm=document.getElementById("upload-form"),ebookGrid=document.getElementById("ebook-grid"),ebookReaderModal=document.getElementById("ebook-reader-modal"),closeReaderBtn=document.getElementById("close-reader-btn"),readerTitle=document.getElementById("reader-title"),ebookContent=document.getElementById("ebook-content"),commentForm=document.getElementById("comment-form"),commentsList=document.getElementById("comments-list"),profileModal=document.getElementById("profile-modal"),closeProfileBtn=document.getElementById("close-profile-btn"),profileForm=document.getElementById("profile-form"),newUsernameInput=document.getElementById("new-username"),notificationToast=document.getElementById("notification-toast"),uploadProgress=document.getElementById("upload-progress"),uploadButton=document.getElementById("upload-button");
-
             let state = { currentUser: null, ebooks: [] };
-
             const showView=(e)=>{loginScreen.classList.add("hidden"),mainApp.classList.add("hidden"),"login"===e?loginScreen.classList.remove("hidden"):"app"===e&&mainApp.classList.remove("hidden")};
             let notificationTimeout;const showNotification=(e,t)=>{clearTimeout(notificationTimeout),notificationToast.innerHTML=`<div class="toast-title">${e}</div><div class="toast-body">${t}</div>`,notificationToast.classList.add("show"),notificationTimeout=setTimeout(()=>{notificationToast.classList.remove("show")},5e3)};
             const renderEbooks=()=>{ebookGrid.innerHTML="",0===state.ebooks.length?ebookGrid.innerHTML="<p>The library is empty... The Admin must scribe a new tale.</p>":state.ebooks.sort((a,b)=>b.createdAt-a.createdAt).forEach(e=>{const t=document.createElement("div");t.className="ebook-card",t.dataset.id=e.id,t.innerHTML=`<h3 class="ebook-title">${e.title}</h3>`,state.currentUser&&state.currentUser.isAdmin&&(()=>{const o=document.createElement("button");o.className="delete-book-btn",o.innerHTML="×",o.dataset.id=e.id,o.title="Delete this E-Book",t.appendChild(o)})(),ebookGrid.appendChild(t)})};
@@ -142,7 +137,6 @@
                     state.currentUser = JSON.parse(loggedInUser);
                     showView('app');
                     adminPanel.classList.toggle('hidden', !state.currentUser.isAdmin);
-                    
                     db.collection("ebooks").onSnapshot(snapshot => {
                         state.ebooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         renderEbooks();
@@ -157,127 +151,79 @@
             loginForm.addEventListener("submit",e=>{e.preventDefault();const t=usernameInput.value.trim(),o=passwordInput.value;if(!t)return void alert("Username cannot be empty.");"Admin"===t&&"Admin"===o?state.currentUser={username:"Admin",isAdmin:!0}:(state.currentUser={username:t,isAdmin:!1},(()=>{const e=JSON.parse(localStorage.getItem("profiles")||"{}");e[t]||(e[t]={pic:""},localStorage.setItem("profiles",JSON.stringify(e)))})()),sessionStorage.setItem("currentUser",JSON.stringify(state.currentUser)),init(),loginForm.reset()});
             logoutBtn.addEventListener("click",()=>{sessionStorage.removeItem("currentUser"),state.currentUser=null,profileModal.style.display="none",init()});
             
-            // --- UPDATED: UPLOAD TO FIREBASE STORAGE ---
             uploadForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const title = document.getElementById('ebook-upload-title').value;
                 const file = document.getElementById('ebook-file-input').files[0];
-
                 if (!title || !file) return;
-
-                uploadButton.disabled = false;
+                uploadButton.disabled = true;
                 uploadProgress.classList.remove('hidden');
-
                 const filePath = `ebooks/${Date.now()}_${file.name}`;
                 const storageRef = storage.ref(filePath);
                 const uploadTask = storageRef.put(file);
-
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        uploadProgress.value = progress;
-                    }, 
-                    (error) => {
-                        console.error("Upload failed: ", error);
-                        showNotification('Upload Failed!', 'The spirits rejected the file.');
-                        uploadButton.disabled = false;
-                        uploadProgress.classList.add('hidden');
-                    }, 
-                    () => {
-                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                            const newBook = {
-                                title: title,
-                                type: file.name.endsWith('.html') ? 'html' : 'text',
-                                storagePath: filePath, // Save the path for deletion
-                                storageUrl: downloadURL, // Save the URL for reading
-                                comments: [],
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                            };
-                            db.collection("ebooks").add(newBook).then(() => {
-                                showNotification('A New Tale Appears!', `The e-book "${title}" is now in the library.`);
-                                uploadForm.reset();
-                                uploadButton.disabled = false;
-                                uploadProgress.classList.add('hidden');
-                            });
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploadProgress.value = progress;
+                }, (error) => {
+                    console.error("Upload failed: ", error);
+                    showNotification('Upload Failed!', 'The spirits rejected the file.');
+                    uploadButton.disabled = false;
+                    uploadProgress.classList.add('hidden');
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        const newBook = {title, type: file.name.endsWith('.html') ? 'html' : 'text', storagePath: filePath, storageUrl: downloadURL, comments: [], createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+                        db.collection("ebooks").add(newBook).then(() => {
+                            showNotification('A New Tale Appears!', `The e-book "${title}" is now in the library.`);
+                            uploadForm.reset();
+                            uploadButton.disabled = false;
+                            uploadProgress.classList.add('hidden');
                         });
-                    }
-                );
+                    });
+                });
             });
 
-            // --- UPDATED: READ FROM FIREBASE STORAGE & DELETE ---
             ebookGrid.addEventListener('click', async (e) => {
-                const card = e.target.closest(".ebook-card");
-                const deleteBtn = e.target.closest(".delete-book-btn");
-
+                const card = e.target.closest(".ebook-card"), deleteBtn = e.target.closest(".delete-book-btn");
                 if (deleteBtn) {
                     e.stopPropagation();
                     if (confirm('Are you sure you want to banish this book to the void? This cannot be undone.')) {
-                        const bookId = deleteBtn.dataset.id;
-                        const book = state.ebooks.find(b => b.id === bookId);
+                        const bookId = deleteBtn.dataset.id, book = state.ebooks.find(b => b.id === bookId);
                         if (!book) return;
                         try {
-                            // Delete from Firestore AND Storage
                             await db.collection("ebooks").doc(bookId).delete();
                             await storage.ref(book.storagePath).delete();
                             showNotification('Banished!', `"${book.title}" was removed from the library.`);
-                        } catch (error) {
-                            console.error("Error deleting book: ", error);
-                            alert("Failed to delete the book. It may be magically protected.");
-                        }
+                        } catch (error) { console.error("Error deleting book: ", error), alert("Failed to delete the book."); }
                     }
                     return;
                 }
-
                 if (card) {
-                    const bookId = card.dataset.id;
-                    const book = state.ebooks.find(b => b.id == bookId);
+                    const bookId = card.dataset.id, book = state.ebooks.find(b => b.id == bookId);
                     if (book && book.storageUrl) {
-                        readerTitle.textContent = "Loading...";
-                        ebookContent.innerHTML = "<p>Summoning the story from the ether...</p>";
-                        ebookReaderModal.style.display = 'block';
-                        
+                        readerTitle.textContent = "Loading...", ebookContent.innerHTML = "<p>Summoning the story from the ether...</p>", ebookReaderModal.style.display = 'block';
                         try {
                             const response = await fetch(book.storageUrl);
                             if (!response.ok) throw new Error('Network response was not ok.');
                             const content = await response.text();
-                            
-                            readerTitle.textContent = book.title;
-                            ebookContent.innerHTML = '';
-                            if (book.type === 'html') {
-                                const iframe = document.createElement('iframe');
-                                iframe.srcdoc = content; iframe.sandbox = 'allow-scripts allow-same-origin';
-                                ebookContent.appendChild(iframe);
-                            } else {
-                                const pre = document.createElement('pre');
-                                pre.textContent = content; ebookContent.appendChild(pre);
-                            }
-                        } catch (error) {
-                            console.error("Error fetching content:", error);
-                            readerTitle.textContent = "Error";
-                            ebookContent.innerHTML = "<p>The story could not be summoned. It may have faded away.</p>";
-                        }
-                        
-                        commentForm.dataset.bookId = bookId;
-                        renderComments(bookId);
+                            readerTitle.textContent = book.title, ebookContent.innerHTML = '';
+                            if (book.type === 'html') { const iframe = document.createElement('iframe'); iframe.srcdoc = content, iframe.sandbox = 'allow-scripts allow-same-origin', ebookContent.appendChild(iframe); }
+                            else { const pre = document.createElement('pre'); pre.textContent = content, ebookContent.appendChild(pre); }
+                        } catch (error) { console.error("Error fetching content:", error), readerTitle.textContent = "Error", ebookContent.innerHTML = "<p>The story could not be summoned.</p>"; }
+                        commentForm.dataset.bookId = bookId, renderComments(bookId);
                     }
                 }
-});
+            });
 
             closeReaderBtn.onclick=()=>ebookReaderModal.style.display="none";closeProfileBtn.onclick=()=>profileModal.style.display="none";window.onclick=e=>{e.target==ebookReaderModal&&(ebookReaderModal.style.display="none"),e.target==profileModal&&(profileModal.style.display="none")};
             
             commentForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const text = document.getElementById('comment-text').value.trim();
-                const bookId = e.target.dataset.bookId;
+                const text = document.getElementById('comment-text').value.trim(), bookId = e.target.dataset.bookId;
                 if (text && bookId) {
                     try {
-                        await db.collection("ebooks").doc(bookId).update({
-                            comments: firebase.firestore.FieldValue.arrayUnion({
-                                username: state.currentUser.username, text: text
-                            })
-                        });
+                        await db.collection("ebooks").doc(bookId).update({ comments: firebase.firestore.FieldValue.arrayUnion({ username: state.currentUser.username, text: text }) });
                         commentForm.reset();
-                    } catch (error) { console.error("Error adding comment: ", error); alert("Could not post comment."); }
+                    } catch (error) { console.error("Error adding comment: ", error), alert("Could not post comment."); }
                 }
             });
             
