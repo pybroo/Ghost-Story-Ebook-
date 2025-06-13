@@ -165,7 +165,7 @@
 
                 if (!title || !file) return;
 
-                uploadButton.disabled = true;
+                uploadButton.disabled = false;
                 uploadProgress.classList.remove('hidden');
 
                 const filePath = `ebooks/${Date.now()}_${file.name}`;
